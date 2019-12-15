@@ -3,6 +3,7 @@ package com.controller;
 import com.entity.*;
 import com.google.gson.Gson;
 import com.service.ProductService;
+import com.service.RetailerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,8 @@ import java.util.List;
 public class ProductController {
     @Autowired
     ProductService productService;
+    @Autowired
+    RetailerService retailerService;
 
     Gson gson = new Gson();
 
@@ -35,9 +38,6 @@ public class ProductController {
 
     @RequestMapping(value = "/accessIndex", method = RequestMethod.POST)
     public Pagination accessIndex(@RequestBody Pagination pagination, HttpServletRequest request, HttpServletResponse response) {
-        User user = new User();
-        user.setId(1);
-        request.getSession().setAttribute("user", user);
         Cookie[] cookies = request.getCookies();
         boolean flag = false;
         if (cookies != null) {
@@ -110,7 +110,11 @@ public class ProductController {
         for (String str : list) {
             Cart cart = new Cart();
             String[] s1 = str.split("_");
-            cart.setNum(Integer.parseInt(s1[1]));
+            if (s1.length > 1) {
+                cart.setNum(Integer.parseInt(s1[1]));
+            } else {
+                break;
+            }
             cart.setSkuId(Integer.parseInt(s1[0]));
             cart.setSku(productService.getSKUById(Integer.parseInt(s1[0])));
             carts.add(cart);
@@ -126,10 +130,73 @@ public class ProductController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String upload(MultipartFile file, HttpServletRequest request) throws IOException {
         String fileName = System.currentTimeMillis() + file.getOriginalFilename();
-        String s = request.getServletContext().getRealPath("") + "upload" + File.separator + fileName;
+        String s = "F:/mall/upload/" + File.separator + fileName;
         File destFile = new File(s);
         destFile.getParentFile().mkdirs();
         file.transferTo(destFile);
-        return fileName;
+        return "http://localhost:8081/mall/upload/" + fileName;
+    }
+
+    @RequestMapping(value = "/getSKUByRetailerId", method = RequestMethod.POST)
+    public List<SKU> getSKUByRetailerId(@RequestBody Retailer retailer) {
+        return productService.getSKUByRetailerId(retailer.getId());
+    }
+
+    @RequestMapping(value = "/changeProductStatus", method = RequestMethod.POST)
+    public void changeProductStatus(@RequestBody SKU sku) {
+        productService.changeProductStatus(sku.getSkuStatus(), sku.getSkuId());
+    }
+
+    @RequestMapping(value = "/disableAllProduct", method = RequestMethod.POST)
+    public List<Retailer> disableAllProduct(@RequestBody Retailer retailer) {
+        productService.disableAllProduct(retailer.getStatus(), retailer.getId());
+        return retailerService.getRetailerList();
+    }
+
+    @RequestMapping(value = "/getProductTend", method = RequestMethod.POST)
+    public ProductTend getProductTend(@RequestBody Retailer retailer) {
+        ProductTend productTend = new ProductTend();
+        List<SKU> skuByRetailerId = productService.getSKUByRetailerId(retailer.getId());
+        for (SKU sku : skuByRetailerId) {
+            productTend.getName().add(sku.getSkuName());
+            productTend.getValue().add(sku.getSkuNum());
+        }
+        return productTend;
+    }
+
+    @RequestMapping(value = "/getSaleNumTend", method = RequestMethod.POST)
+    public ProductTend getProductSaleNumTend(@RequestBody Retailer retailer) {
+        ProductTend productTend = new ProductTend();
+        List<SKU> skuByRetailerId = productService.getSKUByRetailerId(retailer.getId());
+        for (SKU sku : skuByRetailerId) {
+            productTend.getName().add(sku.getSkuName());
+            productTend.getValue().add(sku.getSaleNum());
+        }
+        return productTend;
+    }
+
+    @RequestMapping(value = "/getSearchSuggestion", method = RequestMethod.GET)
+    public List<SKU> getSearchSuggestion() {
+        return productService.findAll();
+    }
+
+    @RequestMapping(value = "/getSKUByName", method = RequestMethod.POST)
+    public List<SKU> getSKUByName(@RequestBody SKU sku) {
+        return productService.getSKUByName(sku.getSkuName());
+    }
+
+    @RequestMapping(value = "/addSKUComment", method = RequestMethod.POST)
+    public void addSKUComment(@RequestBody SKUComment comment) {
+        productService.addComment(comment);
+    }
+
+    @RequestMapping(value = "/getSKUComments", method = RequestMethod.POST)
+    public List<SKUComment> getSKUComments(@RequestBody SKU sku) {
+        return productService.getSKUComment(sku.getSkuId());
+    }
+
+    @RequestMapping(value = "/searchProductByCategory", method = RequestMethod.POST)
+    public List<SKU> getSKUByCategory(@RequestBody Category category) {
+        return productService.searchProductByCategory(category);
     }
 }

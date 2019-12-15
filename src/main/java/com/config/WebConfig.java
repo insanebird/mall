@@ -9,5 +9,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/upload/**").addResourceLocations("file:F:/mall/upload/");
     }
 }

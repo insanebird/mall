@@ -23,6 +23,15 @@ public class Order {
     private List<Cart> cartList;
     private int retailerId;
     private Retailer retailer;
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Retailer getRetailer() {
         return retailer;

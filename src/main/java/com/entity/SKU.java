@@ -1,5 +1,7 @@
 package com.entity;
 
+import java.util.List;
+
 public class SKU {
     private int skuId;
     private String skuName;
@@ -16,27 +18,50 @@ public class SKU {
     private String categoryName;
     private int skuStatus;
     private int skuNum;
+    private String categoryDisplay;
+    private int saleNum;
+    private double rate;
+    private String introduceImages;
+    private List<SKUComment> comments;
 
-    @Override
-    public String toString() {
-        return "SKU{" +
-                "skuId=" + skuId +
-                ", skuName='" + skuName + '\'' +
-                ", skuCode=" + skuCode +
-                ", skuPrice=" + skuPrice +
-                ", skuSpuId=" + skuSpuId +
-                ", skuImage='" + skuImage + '\'' +
-                ", skuDescription='" + skuDescription + '\'' +
-                ", skuCategory=" + skuCategory +
-                ", skuBulletin='" + skuBulletin + '\'' +
-                ", retailerId=" + retailerId +
-                ", retailer=" + retailer +
-                ", category=" + category +
-                ", categoryName='" + categoryName + '\'' +
-                ", skuStatus=" + skuStatus +
-                ", skuNum=" + skuNum +
-                ", skuSpecification='" + skuSpecification + '\'' +
-                '}';
+    public List<SKUComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<SKUComment> comments) {
+        this.comments = comments;
+    }
+
+    public String getIntroduceImages() {
+        return introduceImages;
+    }
+
+    public void setIntroduceImages(String introduceImages) {
+        this.introduceImages = introduceImages;
+    }
+
+    public double getRate() {
+        return rate;
+    }
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public int getSaleNum() {
+        return saleNum;
+    }
+
+    public void setSaleNum(int saleNum) {
+        this.saleNum = saleNum;
+    }
+
+    public String getCategoryDisplay() {
+        return categoryDisplay;
+    }
+
+    public void setCategoryDisplay(String categoryDisplay) {
+        this.categoryDisplay = categoryDisplay;
     }
 
     public int getSkuNum() {

@@ -1,16 +1,70 @@
 package com.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Retailer {
     private int id;
     private String description;
     private Date foundTime;
     private int age;
-    private int open;
-    private String founder;
-    private int rate;
+    private int founder;
+    private double rate;
     private String name;
+    private String displayTime;
+    private String founderName;
+    private String logo;
+    private int status;
+    private List<Order> orders;
+    private List<SKU> skuList;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<SKU> getSkuList() {
+        return skuList;
+    }
+
+    public void setSkuList(List<SKU> skuList) {
+        this.skuList = skuList;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public String getFounderName() {
+        return founderName;
+    }
+
+    public void setFounderName(String founderName) {
+        this.founderName = founderName;
+    }
+
+    public String getDisplayTime() {
+        return displayTime;
+    }
+
+    public void setDisplayTime(String displayTime) {
+        this.displayTime = displayTime;
+    }
 
     public String getName() {
         return name;
@@ -52,27 +106,19 @@ public class Retailer {
         this.age = age;
     }
 
-    public int getOpen() {
-        return open;
-    }
-
-    public void setOpen(int open) {
-        this.open = open;
-    }
-
-    public String getFounder() {
+    public int getFounder() {
         return founder;
     }
 
-    public void setFounder(String founder) {
+    public void setFounder(int founder) {
         this.founder = founder;
     }
 
-    public int getRate() {
+    public double getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(double rate) {
         this.rate = rate;
     }
 }

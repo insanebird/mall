@@ -18,34 +18,50 @@ public class CategoryService {
         return categoryDao.findAllCategory();
     }
 
-    public List<Option> findNestedCategory() {
+    public List<Option> findNestedCategory(Integer level) {
         List<Category> nestedCategory = categoryDao.findTopLevelCategory();
         List<Option> options = new ArrayList<>();
-        for (Category category : nestedCategory) {
-            Option option = new Option();
-            option.setLabel(category.getCategoryName());
-            option.setValue(category.getCategoryId());
-            List<Option> optionList = new ArrayList<>();
-            List<Category> nestedCategory1 = categoryDao.findNestedCategory(category.getCategoryId());
-            category.setList(nestedCategory1);
-            for (Category category1 : nestedCategory1) {
-                Option option1 = new Option();
-                option1.setLabel(category1.getCategoryName());
-                option1.setValue(category1.getCategoryId());
-                List<Option> list = new ArrayList<>();
-                List<Category> nestedCategory2 = categoryDao.findNestedCategory(category1.getCategoryId());
-                for (Category category2 : nestedCategory2) {
-                    Option option2 = new Option();
-                    option2.setLabel(category2.getCategoryName());
-                    option2.setValue(category2.getCategoryId());
-                    list.add(option2);
+        if (level > 0) {
+            for (Category category : nestedCategory) {
+                Option option = new Option();
+                option.setLabel(category.getCategoryName());
+                option.setValue(category.getCategoryId());
+
+                if (level > 1) {
+                    List<Option> optionList = new ArrayList<>();
+                    List<Category> nestedCategory1 = categoryDao.findNestedCategory(category.getCategoryId());
+                    category.setList(nestedCategory1);
+                    for (Category category1 : nestedCategory1) {
+                        Option option1 = new Option();
+                        option1.setLabel(category1.getCategoryName());
+                        option1.setValue(category1.getCategoryId());
+
+                        if (level > 2) {
+                            List<Option> list = new ArrayList<>();
+                            List<Category> nestedCategory2 = categoryDao.findNestedCategory(category1.getCategoryId());
+                            for (Category category2 : nestedCategory2) {
+                                Option option2 = new Option();
+                                option2.setLabel(category2.getCategoryName());
+                                option2.setValue(category2.getCategoryId());
+                                list.add(option2);
+                            }
+                            option1.setChildren(list);
+                        }
+                        optionList.add(option1);
+
+
+                    }
+                    option.setChildren(optionList);
                 }
-                option1.setChildren(list);
-                optionList.add(option1);
+                options.add(option);
+
             }
-            option.setChildren(optionList);
-            options.add(option);
         }
         return options;
+    }
+
+    public void addCategory(Category category) {
+        category.setLevel(category.getLevel() + 1);
+        categoryDao.addCategory(category);
     }
 }

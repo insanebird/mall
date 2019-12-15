@@ -4,6 +4,15 @@ public class Cart {
     private int skuId;
     private int num;
     private SKU sku;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public SKU getSku() {
         return sku;

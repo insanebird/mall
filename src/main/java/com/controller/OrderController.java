@@ -1,6 +1,8 @@
 package com.controller;
 
 import com.entity.Order;
+import com.entity.ProfitTend;
+import com.entity.Retailer;
 import com.entity.User;
 import com.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,32 @@ public class OrderController {
         User user = (User) request.getSession().getAttribute("user");
         order.setStatus(0);
         order.setDate(new Date());
-        order.setUserId(1);
+        order.setUserId(user.getId());
         return orderService.generateOrder(order);
     }
 
-    @RequestMapping(value = "/getOrderList", method = RequestMethod.GET)
-    public List<Order> getOrderList() {
-        return orderService.getOrderListByUserId(1);
+    @RequestMapping(value = "/getOrderList", method = RequestMethod.POST)
+    public List<Order> getOrderList(@RequestBody User user) {
+        return orderService.getOrderListByUserId(user.getId());
+    }
+
+    @RequestMapping(value = "/getOrderByRetailerId", method = RequestMethod.POST)
+    public List<Order> getOrderByRetailerId(@RequestBody Retailer retailer) {
+        return orderService.getOrderByRetailerId(retailer.getId());
+    }
+
+    @RequestMapping(value = "/getTodayOrder", method = RequestMethod.POST)
+    public List<Order> getTodayOrder(@RequestBody Retailer retailer) {
+        return orderService.getTodayOrder(retailer.getId());
+    }
+
+    @RequestMapping(value = "/buyProduct", method = RequestMethod.POST)
+    public void buyProduct(@RequestBody Order order) {
+        orderService.buyProduct(order);
+    }
+
+    @RequestMapping(value = "/getMonthOrderTend", method = RequestMethod.POST)
+    public ProfitTend getMonthOrderTend(@RequestBody Retailer retailer) {
+        return orderService.getOrderByMonthAndRetailerId(retailer.getId());
     }
 }
